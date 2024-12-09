@@ -1,28 +1,46 @@
+using Alura.Adopet.API;
 using Alura.Adopet.API.Dados.Context;
-using Alura.Adopet.API.Dados.Repository;
-using Alura.Adopet.API.Dominio.Entity;
 using Alura.Adopet.API.Service;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);// Criando uma aplicação Web.
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+ConfigureLogRequestSerilogExtension.AddSerialogAPI(builder);
 
 //DI
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-builder.Services.AddScoped<ClienteRepository>()
-                .AddScoped<PetRepository>()
-                .AddScoped<IEventoService,EventoService>()               
-                .AddDbContext<DataBaseContext>(opt => opt.UseInMemoryDatabase("AdopetDB"));
+builder.Services.AddScoped<IEventoService,EventoService>()               
+                .AddDbContext<DataBaseContext>(opt => {
+                    opt.UseInMemoryDatabase("AdopetDB");
+                    opt.UseLoggerFactory(LoggerFactory.Create(builder =>
+                    {
+                        builder.AddSerilog();
+                    }));
+                });
 
 //Habilitando o swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+//{
+//    builder.Services.AddHttpLogging(opt =>
+//    {
+//        opt.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders|
+//                            HttpLoggingFields.ResponsePropertiesAndHeaders|
+//                            HttpLoggingFields.ResponseBody| 
+//                            HttpLoggingFields.ResponseBody;
+//    });
+
+//}
 
 //Adicionando serviços.
 var serviceProvider = builder.Services.BuildServiceProvider();
@@ -34,36 +52,6 @@ eventoService.GenerateFakeDate();
 // Ativando o Swagger
 app.UseSwagger();
 
-//Endpoints
-app.MapPost("/proprietario/add", ([FromServices] ClienteRepository repo, [FromBody] Cliente proprietario) =>
-{
-    return repo.Adicionar(proprietario);
-});
-
-app.MapGet("/proprietario/list", ([FromServices] ClienteRepository repo) =>
-{
-    return repo.ObterTodos();
-});
-
-app.MapPost("/pet/add", ([FromServices] PetRepository repo, [FromBody] Pet pet) => {
-    return repo.Adicionar(pet);
-});
-
-// Listar todas os pets.
-app.MapGet("/pet/list", async ([FromServices] PetRepository repo) =>
-{
-    return Results.Ok(await repo.ObterTodos());
-});
-
-//// Upload de arquivos.
-//app.MapPost("/pet/upload", async(IFormFile file) =>
-//{
-
-//    string tempfile = CreateTempFile.CreateTempfilePath();
-//    using var stream = File.OpenWrite(tempfile);
-//    await file.CopyToAsync(stream);
-//    return Results.Ok("Arquivo enviado com sucesso");
-//});
 
 // Ativando a interface Swagger
 app.UseSwaggerUI(
@@ -74,5 +62,6 @@ app.UseSwaggerUI(
     }
 );
 
+app.MapControllers();
 // Roda a aplicação
 app.Run();

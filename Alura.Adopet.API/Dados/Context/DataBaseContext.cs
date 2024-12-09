@@ -1,11 +1,10 @@
-﻿using Alura.Adopet.API.Dominio.Entity;
+﻿using Alura.Adopet.API.Dominio;
 using Microsoft.EntityFrameworkCore;
 
 namespace Alura.Adopet.API.Dados.Context
 {
-    internal class DataBaseContext: DbContext
-    {      
-
+    public class DataBaseContext: DbContext
+    {     
         public DataBaseContext(DbContextOptions<DataBaseContext> options):base(options) {
             
         }

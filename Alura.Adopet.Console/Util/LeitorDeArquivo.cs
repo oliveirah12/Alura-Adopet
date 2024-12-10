@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Alura.Adopet.Console.Modelos;
 
-namespace Alura.Adopet.Console
+namespace Alura.Adopet.Console.Util
 {
     internal class LeitorDeArquivo
     {
-        public List<Pet> RealizaLeitura(String caminhoDoArquivoASerLido)
+        public List<Pet> RealizaLeitura(string caminhoDoArquivoASerLido)
         {
             List<Pet> listaDePet = new List<Pet>();
             using (StreamReader sr = new StreamReader(caminhoDoArquivoASerLido))
@@ -26,6 +27,7 @@ namespace Alura.Adopet.Console
                     listaDePet.Add(pet);
                 }
             }
+
             return listaDePet;
         }
     }

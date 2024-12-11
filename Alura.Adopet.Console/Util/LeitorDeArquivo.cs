@@ -7,12 +7,22 @@ using Alura.Adopet.Console.Modelos;
 
 namespace Alura.Adopet.Console.Util
 {
-    internal class LeitorDeArquivo
+    public class LeitorDeArquivo
     {
-        public List<Pet> RealizaLeitura(string caminhoDoArquivoASerLido)
+        private string _caminhoArquivo;
+
+        public LeitorDeArquivo(string caminhoArquivo)
         {
+            _caminhoArquivo = caminhoArquivo;
+        }
+
+        public List<Pet> RealizaLeitura()
+        {
+            if(_caminhoArquivo == null) return null;
+            if(!File.Exists(_caminhoArquivo)) return null;
+
             List<Pet> listaDePet = new List<Pet>();
-            using (StreamReader sr = new StreamReader(caminhoDoArquivoASerLido))
+            using (StreamReader sr = new StreamReader(_caminhoArquivo))
             {
                 System.Console.WriteLine("----- Dados a serem importados -----");
                 while (!sr.EndOfStream)

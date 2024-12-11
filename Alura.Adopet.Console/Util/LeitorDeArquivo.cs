@@ -16,7 +16,7 @@ namespace Alura.Adopet.Console.Util
             _caminhoArquivo = caminhoArquivo;
         }
 
-        public List<Pet> RealizaLeitura()
+        public virtual List<Pet> RealizaLeitura()
         {
             if(_caminhoArquivo == null) return null;
             if(!File.Exists(_caminhoArquivo)) return null;

@@ -35,6 +35,7 @@ namespace Alura.Adopet.Console.Util
                     int.Parse(propriedades[2]) == 1 ? TipoPet.Gato : TipoPet.Cachorro
                     );
                     listaDePet.Add(pet);
+
                 }
             }
 

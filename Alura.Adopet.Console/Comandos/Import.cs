@@ -17,7 +17,7 @@ namespace Alura.Adopet.Console.Comandos
             this.leitor = leitor;
         }
 
-        public async Task ExecutarAsync(string[] args)
+        public virtual async Task ExecutarAsync(string[] args)
         {
             await this.ImportacaoArquivoPetAsync(caminhoDoArquivoDeImportacao: args[1]);
         }

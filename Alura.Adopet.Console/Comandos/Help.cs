@@ -1,4 +1,6 @@
 ﻿using Alura.Adopet.Console.Util;
+using FluentResults;
+using System;
 using System.Reflection;
 
 namespace Alura.Adopet.Console.Comandos
@@ -15,10 +17,18 @@ namespace Alura.Adopet.Console.Comandos
             docs = DocumentacaoDoSistema.ToDictionary(Assembly.GetExecutingAssembly()); 
         }
 
-        public Task ExecutarAsync(string[] args)
+        public Task<Result> ExecutarAsync(string[] args)
         {
-            this.ExibeDocumentacao(parametros: args);
-            return Task.CompletedTask;
+            try
+            {
+                this.ExibeDocumentacao(parametros: args);
+                return Task.FromResult(Result.Ok());
+            }
+            catch (Exception ex)
+            {
+                return Task.FromResult(Result.Fail(new Error(ex.Message).CausedBy(ex)));
+            } 
+
         }
 
         private void ExibeDocumentacao(string[] parametros)

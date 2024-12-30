@@ -5,42 +5,44 @@ using FluentResults;
 
 namespace Alura.Adopet.Console.Comandos
 {
-    [DocComando(instrucao: "import",
+    [DocComandoAttribute(instrucao: "import",
         documentacao: "adopet import <ARQUIVO> comando que realiza a importação do arquivo de pets.")]
     public class Import:IComando
     {
         private readonly HttpClientPet clientPet;
-        private readonly LeitorDeArquivo leitor;
 
-        public Import(HttpClientPet clientPet, LeitorDeArquivo leitor)
+        private readonly LeitorDeArquivoCSV leitor;
+
+        public Import(HttpClientPet clientPet, LeitorDeArquivoCSV leitor)
         {
             this.clientPet = clientPet;
             this.leitor = leitor;
         }
 
-        public virtual async Task<Result> ExecutarAsync(string[] args)
+        public async Task<Result> ExecutarAsync()
         {
-            return await this.ImportacaoArquivoPetAsync(caminhoDoArquivoDeImportacao: args[1]);
+            return await this.ImportacaoArquivoPetAsync();
         }
 
-        private async Task<Result> ImportacaoArquivoPetAsync(string caminhoDoArquivoDeImportacao)
+        private async Task<Result> ImportacaoArquivoPetAsync()
         {
-
             try
             {
                 List<Pet> listaDePet = leitor.RealizaLeitura();
                 foreach (var pet in listaDePet)
-                {
-                    System.Console.WriteLine(pet);
-                    await clientPet.CreatePetAsync(pet);
+                {                       
+                   await clientPet.CreatePetAsync(pet);               
                 }
-                System.Console.WriteLine("Importação concluída!");
-                return Result.Ok().WithSuccess(new SuccessWithPets(listaDePet));
+                return Result.Ok().WithSuccess(new SuccessWithPets(listaDePet,"Importação Realizada com Sucesso!"));
             }
-            catch(Exception ex)
+            catch (Exception exception)
             {
-                return Result.Fail(new Error(ex.Message).CausedBy(ex));
+
+                return Result.Fail(new Error("Importação falhou!").CausedBy(exception));
             }
+            
+            
+            
             
         }
     }

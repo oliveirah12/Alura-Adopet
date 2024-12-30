@@ -3,39 +3,33 @@ using FluentResults;
 
 namespace Alura.Adopet.Console.Comandos
 {
-    [DocComando(instrucao: "show",
+    [DocComandoAttribute(instrucao: "show",
        documentacao: "adopet show <ARQUIVO> comando que exibe no terminal o conteúdo do arquivo importado.")]
     internal class Show:IComando
     {
-        private readonly LeitorDeArquivo leitor;
+        private readonly LeitorDeArquivoCSV leitor;
 
-        public Show(LeitorDeArquivo leitor)
+        public Show(LeitorDeArquivoCSV leitor)
         {
             this.leitor = leitor;
         }
 
-        public Task<Result> ExecutarAsync(string[] args)
+        public Task<Result> ExecutarAsync()
         {
             try
             {
-                this.ExibeConteudoArquivo(caminhoDoArquivoASerExibido: args[1]);
-                return Task.FromResult(Result.Ok());
+               return this.ExibeConteudoArquivo(); 
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return Task.FromResult(Result.Fail(new Error(ex.Message).CausedBy(ex)));
+               return Task.FromResult(Result.Fail(new Error("Importação falhou!").CausedBy(exception)));
             }
-            
         }
 
-        private void ExibeConteudoArquivo(string caminhoDoArquivoASerExibido)
-        {
-            var listaDepets = leitor.RealizaLeitura();
-            foreach (var pet in listaDepets)
-            {
-                System.Console.WriteLine(pet);
-            }
-
+        private Task<Result> ExibeConteudoArquivo()
+        {           
+            var listaDepets = leitor.RealizaLeitura();       
+            return Task.FromResult(Result.Ok().WithSuccess(new SuccessWithPets(listaDepets, "Exibição do arquivo realizada com sucesso!")));
 
         }
     }

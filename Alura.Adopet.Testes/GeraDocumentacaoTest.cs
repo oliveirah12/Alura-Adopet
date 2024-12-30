@@ -9,22 +9,23 @@ using System.Threading.Tasks;
 
 namespace Alura.Adopet.Testes
 {
-    public class GeraDocumentacaoTeste
+    public class GeraDocumentacaoTest
     {
         [Fact]
         public void QuandoExistemComandosDeveRetornarDicionarioNaoVazio()
         {
             //Arrange
-            Assembly assemblyComOTipoDocComando = Assembly.GetAssembly(typeof(DocComando))!;
+            Assembly assemblyComOTipoDocComando = Assembly.GetAssembly(typeof(DocComandoAttribute))!;
 
             //Act
-            Dictionary<string, DocComando> dicionario = 
-                DocumentacaoDoSistema.ToDictionary(assemblyComOTipoDocComando);
+            Dictionary<string, DocComandoAttribute> dicionario =
+                  DocumentacaoDoSistema.ToDictionary(assemblyComOTipoDocComando);
 
-            //Assert
+            //Assert            
             Assert.NotNull(dicionario);
             Assert.NotEmpty(dicionario);
             Assert.Equal(4, dicionario.Count);
+
         }
     }
 }

@@ -6,7 +6,8 @@ namespace Alura.Adopet.Console.Servicos
 {
     public class HttpClientPet
     {
-        private HttpClient client;
+        private HttpClient client;     
+
         public HttpClientPet(HttpClient client)
         {
             this.client = client;

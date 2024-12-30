@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Alura.Adopet.Console.Modelos;
+﻿using Alura.Adopet.Console.Modelos;
 
 namespace Alura.Adopet.Console.Util
 {
-    public class LeitorDeArquivo
+    public class LeitorDeArquivoCSV
     {
-        private string _caminhoArquivo;
-
-        public LeitorDeArquivo(string caminhoArquivo)
+        private string caminhoDoArquivoASerLido;
+        public LeitorDeArquivoCSV(string caminhoDoArquivoASerLido)
         {
-            _caminhoArquivo = caminhoArquivo;
+            this.caminhoDoArquivoASerLido = caminhoDoArquivoASerLido;
         }
 
         public virtual List<Pet> RealizaLeitura()
         {
-            if(_caminhoArquivo == null) return null;
-            if(!File.Exists(_caminhoArquivo)) return null;
-
-            List<Pet> listaDePet = new List<Pet>();
-            using (StreamReader sr = new StreamReader(_caminhoArquivo))
+            if (string.IsNullOrEmpty(this.caminhoDoArquivoASerLido))
             {
-                System.Console.WriteLine("----- Dados a serem importados -----");
+                return null;
+            }
+            List<Pet> listaDePet = new List<Pet>();
+            using (StreamReader sr = new StreamReader(caminhoDoArquivoASerLido))
+            {               
                 while (!sr.EndOfStream)
                 {
                     // separa linha usando ponto e vírgula
@@ -35,7 +29,6 @@ namespace Alura.Adopet.Console.Util
                     int.Parse(propriedades[2]) == 1 ? TipoPet.Gato : TipoPet.Cachorro
                     );
                     listaDePet.Add(pet);
-
                 }
             }
 

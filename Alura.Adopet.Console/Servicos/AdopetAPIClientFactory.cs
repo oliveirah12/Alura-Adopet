@@ -11,7 +11,6 @@ namespace Alura.Adopet.Console.Servicos
     public class AdopetAPIClientFactory : IHttpClientFactory
     {
         private string url = "http://localhost:5057";
-
         public HttpClient CreateClient(string name)
         {
             HttpClient _client = new HttpClient();

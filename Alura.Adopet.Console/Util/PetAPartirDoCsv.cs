@@ -9,24 +9,22 @@ namespace Alura.Adopet.Console.Util
 {
     public static class PetAPartirDoCsv
     {
-        public static Pet ConverteDoTexto(this string? linha)
-        {     
+        public static Pet ConverteDoTexto(this string linha)
+        {
+            string[]? propriedades = linha?.Split(';') ?? throw new ArgumentNullException("Texto não pode ser nulo!");
 
-            string[]? propriedades = linha?.Split(';') ?? throw new ArgumentNullException("Linha Nula");
+            if (string.IsNullOrEmpty(linha)) throw new ArgumentException("Texto não pode ser vazio");
 
-            if (string.IsNullOrEmpty(linha)) throw new ArgumentException("Linha Vazia");
+            bool guidValido = Guid.TryParse(propriedades[0], out Guid petId);
+            if (!guidValido) throw new ArgumentException("Identificador do pet inválido!");
 
-            if(propriedades.Length != 3) throw new ArgumentException("Campos Insuficientes");
+            bool tipoValido = int.TryParse(propriedades[2], out int tipoPet);
+            if (!tipoValido) throw new ArgumentException("Tipo do pet inválido!");
 
-            if(!Guid.TryParse(propriedades[0], out Guid petId)) throw new ArgumentException("GUID Inválido");
+            int[] enums = Array.ConvertAll(Enum.GetValues<TipoPet>(), value => (int)value);
+            if (!enums.Contains(tipoPet)) throw new ArgumentException("Tipo do pet inválido!");
 
-            bool sucesso = int.TryParse(propriedades[2], out int tipoPet);
-            if(!sucesso) throw new ArgumentException("Tipo de Pet inválido");
-
-            if (tipoPet != 0 && tipoPet != 1) throw new ArgumentException("Tipo de Pet inválido");
-
-            return new Pet(petId, propriedades[1], tipoPet == 0 ? TipoPet.Gato : TipoPet.Cachorro
-            );
+            return new Pet(petId, propriedades[1], (TipoPet)tipoPet);
         }
     }
 }

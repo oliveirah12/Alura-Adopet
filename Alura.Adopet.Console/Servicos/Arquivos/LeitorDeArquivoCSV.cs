@@ -1,8 +1,9 @@
 ﻿using Alura.Adopet.Console.Modelos;
+using Alura.Adopet.Console.Servicos.Abstracoes;
 
-namespace Alura.Adopet.Console.Util
+namespace Alura.Adopet.Console.Servicos.Arquivos
 {
-    public class LeitorDeArquivoCSV
+    public class LeitorDeArquivoCSV : ILeitorDeArquivos
     {
         private string caminhoDoArquivoASerLido;
         public LeitorDeArquivoCSV(string caminhoDoArquivoASerLido)
@@ -10,15 +11,15 @@ namespace Alura.Adopet.Console.Util
             this.caminhoDoArquivoASerLido = caminhoDoArquivoASerLido;
         }
 
-        public virtual List<Pet> RealizaLeitura()
+        public virtual IEnumerable<Pet> RealizaLeitura()
         {
-            if (string.IsNullOrEmpty(this.caminhoDoArquivoASerLido))
+            if (string.IsNullOrEmpty(caminhoDoArquivoASerLido))
             {
                 return null;
             }
             List<Pet> listaDePet = new List<Pet>();
             using (StreamReader sr = new StreamReader(caminhoDoArquivoASerLido))
-            {               
+            {
                 while (!sr.EndOfStream)
                 {
                     // separa linha usando ponto e vírgula

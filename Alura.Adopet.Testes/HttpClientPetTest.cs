@@ -1,5 +1,6 @@
 
 using Alura.Adopet.Console.Servicos;
+using Alura.Adopet.Console.Servicos.Http;
 using Moq;
 using Moq.Protected;
 using System.Net;

@@ -1,4 +1,5 @@
-﻿using Alura.Adopet.Console.Util;
+﻿using Alura.Adopet.Console.Servicos.Abstracoes;
+using Alura.Adopet.Console.Util;
 using FluentResults;
 
 namespace Alura.Adopet.Console.Comandos
@@ -7,9 +8,9 @@ namespace Alura.Adopet.Console.Comandos
        documentacao: "adopet show <ARQUIVO> comando que exibe no terminal o conteúdo do arquivo importado.")]
     internal class Show:IComando
     {
-        private readonly LeitorDeArquivoCSV leitor;
+        private readonly ILeitorDeArquivos leitor;
 
-        public Show(LeitorDeArquivoCSV leitor)
+        public Show(ILeitorDeArquivos leitor)
         {
             this.leitor = leitor;
         }
@@ -22,7 +23,7 @@ namespace Alura.Adopet.Console.Comandos
             }
             catch (Exception exception)
             {
-               return Task.FromResult(Result.Fail(new Error("Importação falhou!").CausedBy(exception)));
+               return Task.FromResult(Result.Fail(new Error("Importação falhou!\n" + exception.Message).CausedBy(exception)));
             }
         }
 

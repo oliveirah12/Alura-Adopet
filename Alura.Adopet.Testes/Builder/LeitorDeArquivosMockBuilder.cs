@@ -1,5 +1,5 @@
 ﻿using Alura.Adopet.Console.Modelos;
-using Alura.Adopet.Console.Util;
+using Alura.Adopet.Console.Servicos.Arquivos;
 using Moq;
 
 namespace Alura.Adopet.Testes.Builder

@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Alura.Adopet.Console.Servicos
+namespace Alura.Adopet.Console.Servicos.Http
 {
     public class AdopetAPIClientFactory : IHttpClientFactory
     {
